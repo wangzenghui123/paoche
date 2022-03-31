@@ -3,6 +3,7 @@ package com.example.paoche.cache;
 import com.example.paoche.util.ApplicationContextUtil;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Collection;
@@ -11,15 +12,18 @@ import java.util.Set;
 
 public class RedisCache<K,V> implements Cache<K,V> {
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public V get(K k) throws CacheException {
-        RedisTemplate redisTemplate = (RedisTemplate) ApplicationContextUtil.getApplicationContext().getBean("redisTemplate");
-
-        return null;
+        if(k == null)return null;
+        return (V) redisTemplate.opsForValue().get(k);
     }
 
     @Override
     public V put(K k, V v) throws CacheException {
+
         return null;
     }
 

@@ -1,5 +1,7 @@
 package com.example.paoche.service;
 
+import com.example.paoche.exception.BusinessException;
+import com.example.paoche.exception.code.BaseResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -21,7 +23,9 @@ public class RedisService {
             if(key == null || key.equals("")) return  false;
             return redisTemplate.hasKey(key);
         }
-
+        public long getExpire(String key,TimeUnit unit){
+            return  redisTemplate.getExpire(key,unit);
+        }
 
 //    public boolean exists(String key){
 //        Jedis jedis = null;

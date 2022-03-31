@@ -1,6 +1,9 @@
 package com.example.paoche.Realm;
 
 
+import com.example.paoche.constants.Constant;
+import com.example.paoche.service.RedisService;
+import com.example.paoche.service.RoleService;
 import com.example.paoche.shiro.MyUsernamePasswordToken;
 import com.example.paoche.util.ApplicationContextUtil;
 import com.example.paoche.util.ByteSourceUtil;
@@ -10,15 +13,34 @@ import com.example.paoche.entity.User;
 import com.example.paoche.service.PermissionService;
 import com.example.paoche.service.UserService;
 import com.example.paoche.service.impl.RoleServiceImpl;
+import com.example.paoche.util.JwtTokenUtil;
+import io.jsonwebtoken.Claims;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class MyRealm extends AuthorizingRealm {
+
+    @Autowired
+    private UserService userServiceImpl;
+
+    @Autowired
+    private RoleService roleServiceImpl;
+
+    @Autowired
+    private PermissionService permissionServiceImpl;
+
+    @Autowired
+    private RedisService redisService;
+
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -27,37 +49,34 @@ public class MyRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        String username = (String) principalCollection.getPrimaryPrincipal();
-        UserService userServiceImpl = (UserService) ApplicationContextUtil.getApplicationContext().getBean("userServiceImpl");
-        RoleServiceImpl roleServiceImpl = (RoleServiceImpl) ApplicationContextUtil.getApplicationContext().getBean("roleServiceImpl");
-        PermissionService permissionServiceImpl = (PermissionService) ApplicationContextUtil.getApplicationContext().getBean("permissionServiceImpl");
-        User user = userServiceImpl.findUserByName(username);
-        if(user != null){
-            SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-            List<Role> roles = roleServiceImpl.findRolesByUserId(user.getId());
-            roles.forEach(role -> {
-                simpleAuthorizationInfo.addRole(role.getRolename());
+        String token = (String) principalCollection.getPrimaryPrincipal();
+        String userId = JwtTokenUtil.getUserId(token);
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        if(redisService.hasKey(Constant.JWT_REFRESH_KEY+userId)&&JwtTokenUtil.getRemainingTime(token)< redisService.getExpire(Constant.JWT_REFRESH_KEY+token, TimeUnit.MILLISECONDS)){
+            List<Role> rolesByUserId = roleServiceImpl.findRolesByUserId(userId);
+            rolesByUserId.forEach(role -> {
+                info.addRole(role.getRolename());
                 List<Permission> permissionsByRoleId = permissionServiceImpl.findPermissionsByRoleId(role.getId());
                 permissionsByRoleId.forEach(permission -> {
-                    simpleAuthorizationInfo.addStringPermission(permission.getPermission_name());
+                    info.addStringPermission(permission.getPermission_name());
                 });
             });
-            return simpleAuthorizationInfo;
+        }else{
+            Claims claimsFromToken = JwtTokenUtil.getClaimsFromToken(token);
+            if(claimsFromToken.get(Constant.JWT_ROLES_KEY)!= null){
+                info.setRoles((Set<String>) claimsFromToken.get(Constant.JWT_ROLES_KEY));
+            }
+            if(claimsFromToken.get(Constant.JWT_PERMISSIONS_KEY)!=null){
+                info.setRoles((Set<String>) claimsFromToken.get(Constant.JWT_PERMISSIONS_KEY));
+            }
         }
-        return null;
+        return info;
+
     }
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        String  username = (String) token.getPrincipal();
-        if (username != null && username != ""){
-            UserService userServiceImpl = (UserService) ApplicationContextUtil.getApplicationContext().getBean("userServiceImpl");
-            User user = userServiceImpl.findUserByName(username);
-            String password = user.getPassword();
-            String salt = user.getSalt();
-            return new SimpleAuthenticationInfo(username,password, ByteSourceUtil.getSimpleByteSource(salt),this.getName());
-        }
-        return null;
+        return new SimpleAuthenticationInfo(token.getPrincipal(),token.getCredentials(),this.getName());
     }
 }
