@@ -2,6 +2,7 @@ package com.example.paoche.config;
 
 
 import com.example.paoche.Realm.MyRealm;
+import com.example.paoche.shiro.MyAccessControlFilter;
 import com.example.paoche.shiro.MyHashedCredentialsMatcher;
 import com.example.paoche.util.JwtTokenUtil;
 import com.example.paoche.util.TokenSettings;
@@ -12,6 +13,10 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class ShiroConfig {
 
@@ -19,6 +24,8 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultSecurityManager defaultSecurityManager){
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
         bean.setSecurityManager(defaultSecurityManager);
+        Map<String,Filter> filter = new HashMap<>();
+        filter.put("f1",new MyAccessControlFilter());
         return bean;
     }
 

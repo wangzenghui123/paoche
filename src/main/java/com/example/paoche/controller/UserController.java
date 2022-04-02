@@ -28,10 +28,10 @@ public class UserController {
     @RequestMapping("/")
     @ResponseBody
     public User getUser(){
-
-        return userServiceImpl.findUserByName("a3");
+        User user = new User();
+        user.setUsername("wzh");
+        return user;
     }
-
 
     public List<Role> getRoles(){
         return roleServiceImpl.findRolesByUserId("1");

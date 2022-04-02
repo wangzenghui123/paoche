@@ -1,5 +1,7 @@
 package com.example.paoche.exception;
 
+import com.example.paoche.exception.code.BaseResponseCode;
+
 public class BusinessException extends RuntimeException{
 
     private final int code;
@@ -10,6 +12,10 @@ public class BusinessException extends RuntimeException{
         super(defaultMessage);
         this.code = code;
         this.defaultMessage = defaultMessage;
+    }
+
+    public BusinessException(BaseResponseCode baseResponseCode){
+        this(baseResponseCode.getCode(),baseResponseCode.getMsg());
     }
 
     public int getCode(){

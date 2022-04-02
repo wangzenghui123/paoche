@@ -71,7 +71,6 @@ public class MyRealm extends AuthorizingRealm {
             }
         }
         return info;
-
     }
 
     @Override
