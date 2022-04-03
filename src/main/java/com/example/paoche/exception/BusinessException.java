@@ -15,7 +15,8 @@ public class BusinessException extends RuntimeException{
     }
 
     public BusinessException(BaseResponseCode baseResponseCode){
-        this(baseResponseCode.getCode(),baseResponseCode.getMsg());
+        this.code = baseResponseCode.getCode();
+        this.defaultMessage = baseResponseCode.getMsg();
     }
 
     public int getCode(){

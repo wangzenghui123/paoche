@@ -2,8 +2,13 @@ package com.example.paoche.util;
 
 import com.example.paoche.exception.code.BaseResponseCode;
 import com.example.paoche.exception.code.ResponseCodeInterface;
+import jdk.nashorn.internal.objects.annotations.Setter;
+import lombok.*;
 
-public class DataResult<T> {
+import java.io.Serializable;
+
+@Data
+public class DataResult<T>  {
 
     private int code;
     private String msg;
@@ -12,10 +17,12 @@ public class DataResult<T> {
     public DataResult(int code,String msg){
         this.code = code;
         this.msg = msg;
+        this.data = null;
     }
 
     public DataResult(int code,T data){
         this.code = code;
+        this.msg = null;
         this.data = data;
     }
 

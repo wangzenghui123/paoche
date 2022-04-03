@@ -7,11 +7,15 @@ import com.example.paoche.service.impl.PermissionServiceImpl;
 import com.example.paoche.service.impl.RoleServiceImpl;
 import com.example.paoche.service.impl.UserServiceImpl;
 import com.example.paoche.util.Md5HashUtil;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.Filter;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -25,12 +29,23 @@ public class UserController {
     @Autowired
     private PermissionServiceImpl permissionServiceImpl;
 
+    @Autowired
+    private ShiroFilterFactoryBean shiroFilterFactoryBean;
+
     @RequestMapping("/")
     @ResponseBody
     public User getUser(){
         User user = new User();
         user.setUsername("wzh");
+        Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
+        Filter token = filters.get("token");
+        System.out.println(token == null);
         return user;
+    }
+
+    @RequestMapping("/index")
+    public String getIndex(){
+        return "index.html";
     }
 
     public List<Role> getRoles(){
