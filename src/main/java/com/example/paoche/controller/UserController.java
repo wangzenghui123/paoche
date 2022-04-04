@@ -3,6 +3,8 @@ package com.example.paoche.controller;
 import com.example.paoche.entity.Permission;
 import com.example.paoche.entity.Role;
 import com.example.paoche.entity.User;
+import com.example.paoche.exception.BusinessException;
+import com.example.paoche.exception.code.BaseResponseCode;
 import com.example.paoche.service.impl.PermissionServiceImpl;
 import com.example.paoche.service.impl.RoleServiceImpl;
 import com.example.paoche.service.impl.UserServiceImpl;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/api")
 public class UserController {
 
     @Autowired
@@ -43,9 +46,15 @@ public class UserController {
         return user;
     }
 
+    @RequestMapping("/user/login")
+    public String login(){
+
+        return "login";
+
+    }
     @RequestMapping("/index")
-    public String getIndex(){
-        return "index.html";
+    public void getIndex(){
+        throw new BusinessException(BaseResponseCode.TOKEN_NOT_NULL);
     }
 
     public List<Role> getRoles(){

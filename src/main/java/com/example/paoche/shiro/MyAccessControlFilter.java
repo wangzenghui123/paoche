@@ -31,31 +31,30 @@ public class MyAccessControlFilter extends AccessControlFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
+        servletRequest.setCharacterEncoding("UTF-8");
+        log.info("进入过滤器....");
+       HttpServletRequest request = (HttpServletRequest) servletRequest;
+       String token = request.getHeader(Constant.ACCESS_TOKEN);
+       try{
+           if( token == null){
+               log.info("token为null");
+               throw new BusinessException(BaseResponseCode.TOKEN_NOT_NULL);
+           }
+           MyUsernamePasswordToken myUsernamePasswordToken = new MyUsernamePasswordToken(token);
+           getSubject(servletRequest,servletResponse).login(myUsernamePasswordToken);
+       }catch (BusinessException e){
+           customResponse(e.getCode(),e.getDefaultMessage(),servletResponse);
+           return false;
+       }catch (AuthorizationException e){
+           if(e.getCause() instanceof BusinessException){
+               BusinessException exception = (BusinessException) e.getCause();
+               customResponse(exception.getCode(),exception.getDefaultMessage(),servletResponse);
+           }else{
+               customResponse(BaseResponseCode.SHIRO_AUTHENTICATION_ERROR.getCode(), BaseResponseCode.SHIRO_AUTHENTICATION_ERROR.getMsg(), servletResponse);
+               return false;
+           }
+       }
         return true;
-//        servletRequest.setCharacterEncoding("UTF-8");
-//        log.info("进入过滤器....");
-//       HttpServletRequest request = (HttpServletRequest) servletRequest;
-//       String token = request.getHeader(Constant.ACCESS_TOKEN);
-//       try{
-//           if( token == null){
-//               log.info("token为null");
-//               throw new BusinessException(BaseResponseCode.TOKEN_NOT_NULL);
-//           }
-//           MyUsernamePasswordToken myUsernamePasswordToken = new MyUsernamePasswordToken(token);
-//           getSubject(servletRequest,servletResponse).login(myUsernamePasswordToken);
-//       }catch (BusinessException e){
-//           customResponse(e.getCode(),e.getDefaultMessage(),servletResponse);
-//           return false;
-//       }catch (AuthorizationException e){
-//           if(e.getCause() instanceof BusinessException){
-//               BusinessException exception = (BusinessException) e.getCause();
-//               customResponse(exception.getCode(),exception.getDefaultMessage(),servletResponse);
-//           }else{
-//               customResponse(BaseResponseCode.SHIRO_AUTHENTICATION_ERROR.getCode(), BaseResponseCode.SHIRO_AUTHENTICATION_ERROR.getMsg(), servletResponse);
-//               return false;
-//           }
-//       }
-//        return true;
     }
 
     public void customResponse(int code,String msg,ServletResponse response){

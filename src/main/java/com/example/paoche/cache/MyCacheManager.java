@@ -5,6 +5,8 @@ import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import sun.security.tools.keytool.Resources;
+
 
 public class MyCacheManager implements CacheManager {
 
@@ -13,5 +15,6 @@ public class MyCacheManager implements CacheManager {
     @Override
     public <K, V> Cache<K, V> getCache(String s) throws CacheException {
         return new RedisCache<>(redisService);
+
     }
 }
