@@ -10,8 +10,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class MyRedisSerializer implements RedisSerializer<Object> {
-    private final Charset charset;
 
+    private final Charset charset;
 
     public MyRedisSerializer() {
         this(StandardCharsets.UTF_8);

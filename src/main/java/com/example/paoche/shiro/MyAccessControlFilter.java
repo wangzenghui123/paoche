@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class MyAccessControlFilter extends AccessControlFilter {
+
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws Exception {
         return false;
@@ -79,8 +80,4 @@ public class MyAccessControlFilter extends AccessControlFilter {
             }
         }
     }
-
-
-
-
 }

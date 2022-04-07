@@ -35,7 +35,7 @@ public class UserController {
     @Autowired
     private ShiroFilterFactoryBean shiroFilterFactoryBean;
 
-    @RequestMapping("/")
+    @RequestMapping("/main")
     @ResponseBody
     public User getUser(){
         User user = new User();
