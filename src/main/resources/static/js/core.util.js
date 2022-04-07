@@ -106,38 +106,83 @@
 //     };
 //     return coreUtil;
 // })(CoreUtil, window);
-
 var CoreUtil = (function (){
     var coreUtil = {};
-    coreUtil.sendAjax = function (url,params,async,type,contentType,headers){
+    coreUtil.sendAjax = function (url,params,method,headers,ft,dataType,contentType,noAuthorityFt){
         layui.jquery.ajax({
             url:url,
-            data:params,
-            async:async == undefined ? true:async,
-            type:type == undefined ?'POST':type,
-            contentType:contentType == undefined ? 'application/json;charset=utf-8':contentType,
-            dataType:'json',
             cache:false,
+            data:params,
+            type:method == undefined?'POST':method,
+            contentType:contentType == undefined?'application/json;charset=utf-8':contentType,
+            dataType:'json',
+            async:async  == undefined?true:async,
             beforeSend:function (request){
                 if(headers == undefined){
 
-                }else if(headers == true){
-                    request.setRequestHeader("authorization",)
+                }else if(headers){
+                    request.setRequestHeader('authorization',CoreUtil.getData('access_token'));
+                    request.setRequestHeader('refresh_token',CoreUtil.getData('refresh_token'));
+                }else{
+                    request.setRequestHeader('authorization',CoreUtil.getData('access_token'));
+                }
+
+            },
+            success:function (resp){
+                if(typeof ft == 'function'){
+                    if(resp.code == 4010001){
+                        //凭证过期重新登录
+                        window.location.href='/api/user/login'
+                    }else if(resp.code == 4010002){
+                        //需要刷新token
+                        var reurl = url;
+                        var reparams = params;
+                        var remethod = method;
+                        var reheaders = headers;
+                        var recontentType = contentType;
+                        var redataType = dataType;
+                        var reft = ft;
+                        var renoAuthorityFt = noAuthorityFt;
+                        CoreUtil.sendAjax('/api/user/token',null,'GET',true,function (resp){
+                            if(resp.code == 0){
+                                CoreUtil.setData('access_token',resp.data)
+                                CoreUtil.sendAjax(reurl,reparams,remethod,reheaders,reft,redataType,recontentType,renoAuthorityFt)
+                            }else{
+                                window.location.href='/api/user/login'
+                            }
+                        })
+
+                    }else if(resp.code == 0){
+                        if(ft != null && ft != undefined){
+                            ft(resp)
+                        }
+                    }else if(resp.code == 4030001){
+                        if(noAuthorityFt != null && noAuthorityFt != undefined){
+                            noAuthorityFt(resp)
+                        }
+                    }else{
+                        layer.msg(code.msg)
+                    }
                 }
             },
-            success:function (){
-
-            },
-            error:function (){
-
+            error:function (XMLHttpRequest,textStatus,errorThrow){
+                if(XMLHttpRequest.status = 404){
+                    window.location.href='/index/404'
+                }else{
+                    layer.msg("服务器出了点问题，请稍后重试！！")
+                }
             }
+
         })
-    };
+    }
     coreUtil.setData = function (key,value){
-        layui.sessionData("LocalData",key,value);
+        layui.sessionData('LocalData',{
+            key:key;
+            value:value;
+        })
     }
-    coreUtil.getData = function (key){
-       let map =  layui.sessionData('LocalData');
-       return map[key];
+    coreUtil.getData = function(key){
+        let localData = layui.sessionData('LocalData')
+        return localData[key];
     }
-})(CoreUtil,window);
+})(CoreUtil,window)
