@@ -15,6 +15,5 @@ public class MyCacheManager implements CacheManager {
     @Override
     public <K, V> Cache<K, V> getCache(String s) throws CacheException {
         return new RedisCache<>(redisService);
-
     }
 }

@@ -175,13 +175,10 @@ public class ShiroConfig {
         // 配置不会被拦截的链接 顺序判断
 
         filterChainDefinitionMap.put("/api/user/login", "anon");
-        filterChainDefinitionMap.put("/index/**","anon");
+        filterChainDefinitionMap.put("/api/index/**","anon");
         filterChainDefinitionMap.put("/index","anon");
-        filterChainDefinitionMap.put("/api/main","anon");
-        filterChainDefinitionMap.put("/index.html","anon");
         filterChainDefinitionMap.put("/login.html","anon");
         filterChainDefinitionMap.put("/images/**", "anon");
-        filterChainDefinitionMap.put("/1.jpg", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/layui/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");

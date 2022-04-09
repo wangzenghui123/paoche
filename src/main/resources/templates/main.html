@@ -6,14 +6,28 @@
     <title>layout 管理系统大布局 - Layui</title>
     <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css">
     <script src="/static/js/core.util.js"></script>
-    <script>
-        CoreUtil.sendAjax("apl/")
-    </script>
+    <script src="/static/layui/layui.all.js"></script>
+    <style>
+        .system-title{
+            font-family: "微软雅黑 Light";
+            font-size:20px;
+            color: #0000FF;
+        }
+        .layui-body{
+            overflow: hidden;
+        }
+        iframe{
+            margin: 0px;
+            border: 0px;
+            width: 100%;
+        }
+    </style>
+
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo layui-hide-xs layui-bg-black">layout demo</div>
+        <div class="system-title layui-logo layui-hide-xs layui-bg-black ">炮车疫情防控系统</div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <!-- 移动端显示 -->
@@ -35,8 +49,8 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
                 <a href="javascript:;">
-                    <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
-                    tester
+                    <img src="" class="layui-nav-img">
+                    王增辉
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">Your Profile</a></dd>
@@ -86,7 +100,7 @@
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 15px;">内容主体区域。记得修改 layui.css 和 js 的路径</div>
+        <iframe id=" myiframe" src="1.html"></iframe>
     </div>
 
     <div class="layui-footer">
@@ -122,6 +136,13 @@
         });
 
     });
+</script>
+<script>
+        let myiframe = document.getElementById(" myiframe")
+        let height = window.getComputedStyle(myiframe).height.replace("px","");
+        let parentElement = myiframe.parentElement;
+        let fheight = window.getComputedStyle(parentElement).height
+        myiframe.style.height=fheight;
 </script>
 </body>
 </html>

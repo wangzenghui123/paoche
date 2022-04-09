@@ -1,6 +1,7 @@
 package com.example.paoche;
 
 import com.example.paoche.util.JwtTokenUtil;
+import com.example.paoche.util.Md5HashUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,11 @@ public class JwtTokenUtilTest {
         String accessToken = JwtTokenUtil.getAccessToken("111", new HashMap<>());
         Claims claimsFromToken = JwtTokenUtil.getClaimsFromToken(accessToken);
         System.out.println("Subject "+claimsFromToken.getSubject());
-        System.out.println("Ê£ÓàÊ±¼ä"+JwtTokenUtil.getRemainingTime(accessToken));
+        System.out.println("Ê£ï¿½ï¿½Ê±ï¿½ï¿½"+JwtTokenUtil.getRemainingTime(accessToken));
+    }
+
+    @Test
+    public void testHashUtil(){
+        System.out.println(Md5HashUtil.hashPassword("123456", "yyyyyy", 1024));
     }
 }
