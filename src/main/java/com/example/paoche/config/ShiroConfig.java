@@ -181,7 +181,6 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/index.html","anon");
         filterChainDefinitionMap.put("/login.html","anon");
         filterChainDefinitionMap.put("/images/**", "anon");
-        filterChainDefinitionMap.put("/1.jpg", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/layui/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
