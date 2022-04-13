@@ -2,17 +2,13 @@ package com.example.paoche.Realm;
 
 
 import com.example.paoche.constants.Constant;
+import com.example.paoche.entity.SysRole;
 import com.example.paoche.service.RedisService;
 import com.example.paoche.service.RoleService;
 import com.example.paoche.shiro.MyUsernamePasswordToken;
-import com.example.paoche.util.ApplicationContextUtil;
-import com.example.paoche.util.ByteSourceUtil;
-import com.example.paoche.entity.Permission;
-import com.example.paoche.entity.Role;
-import com.example.paoche.entity.User;
+import com.example.paoche.entity.SysPermission;
 import com.example.paoche.service.PermissionService;
 import com.example.paoche.service.UserService;
-import com.example.paoche.service.impl.RoleServiceImpl;
 import com.example.paoche.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.apache.shiro.authc.*;
@@ -21,7 +17,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
 import java.util.Set;
@@ -53,12 +48,12 @@ public class MyRealm extends AuthorizingRealm {
         String userId = JwtTokenUtil.getUserId(token);
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         if(redisService.hasKey(Constant.JWT_REFRESH_KEY+userId)&&JwtTokenUtil.getRemainingTime(token)< redisService.getExpire(Constant.JWT_REFRESH_KEY+token, TimeUnit.MILLISECONDS)){
-            List<Role> rolesByUserId = roleServiceImpl.findRolesByUserId(userId);
+            List<SysRole> rolesByUserId = roleServiceImpl.findRolesByUserId(userId);
             rolesByUserId.forEach(role -> {
-                info.addRole(role.getRolename());
-                List<Permission> permissionsByRoleId = permissionServiceImpl.findPermissionsByRoleId(role.getId());
+                info.addRole(role.getName());
+                List<SysPermission> permissionsByRoleId = permissionServiceImpl.findPermissionsByRoleId(role.getId());
                 permissionsByRoleId.forEach(permission -> {
-                    info.addStringPermission(permission.getPermission_name());
+                    info.addStringPermission(permission.getName());
                 });
             });
         }else{

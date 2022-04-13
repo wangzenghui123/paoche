@@ -9,8 +9,12 @@
     <link rel="stylesheet" href="/static/layui/css/layui.css"  media="all">
     <style>
         body{
-            background: linear-gradient(to right, #08268d, #8d087b);
+            /*background: linear-gradient(to right, #08268d, #8d087b);*/
+            background-image: url("/static/images/2.png ");
+            background-size: 100% 120%;
+            overflow-y: hidden;
             margin: 0px;
+            padding: 0px;
         }
         .Box{
             height: 720px;
@@ -24,7 +28,7 @@
             position: relative;
             background-color: rgba(0,0,0,0.3);
             top: 40%;
-            left: 50%;
+            left: 80%;
             transform: translate(-50%,-50%);
             align-content: center;
             align-items: center;
@@ -43,7 +47,7 @@
             transform: translate(-50%,-50%);
             left: 50%;
             margin-bottom: 10px;
-            margin-top: 20px;
+            margin-top: 10px;
             height: 30px;
             border-radius: 10px;
             font-family: "微软雅黑 Light";
@@ -63,6 +67,11 @@
             right: 120px;
             width: 50px;
         }
+        h2{
+            position: relative;
+            left:20%;
+            color: #e2e2e2;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +79,7 @@
     <div class="Box">
         <div class="loginBox">
             <form class="layui-form">
+                <h2>四王村专属疫情防控系统</h2>
                 <input id="username" type="text" name="username"  lay-verify="required"  placeholder="请输入用户名">
                 <br>
                 <input id="password" type="password" name="password" lay-verify="required" placeholder="请输入密码">
@@ -91,7 +101,7 @@
             ,layer = layui.layer
         //form.render(); //更新全部
         form.on('submit(mySubmit)',function (data){
-            CoreUtil.sendAjax("/api/user/login",JSON.stringify(data.field),undefined,undefined,function (resp){
+            CoreUtil.sendAjax("/api/sysUser/login",JSON.stringify(data.field),undefined,undefined,function (resp){
                 alert(resp.data.access_token);
                 CoreUtil.setData("access_token",resp.data.access_token);
                 CoreUtil.setData("refresh_token",resp.data.refresh_token);

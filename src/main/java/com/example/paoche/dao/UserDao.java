@@ -1,12 +1,12 @@
 package com.example.paoche.dao;
 
 
-import com.example.paoche.entity.User;
+import com.example.paoche.entity.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 
 
 @Mapper
 public interface UserDao {
-    User findUserByName(String username);
+    SysUser findUserByName(String username);
 
 }

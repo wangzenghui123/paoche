@@ -1,7 +1,7 @@
 package com.example.paoche.service.impl;
 
 import com.example.paoche.dao.RoleDao;
-import com.example.paoche.entity.Role;
+import com.example.paoche.entity.SysRole;
 import com.example.paoche.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ public class RoleServiceImpl implements RoleService {
     private RoleDao roleDao;
 
     @Override
-    public List<Role> findRolesByUserId(String id) {
-        List<Role> roleList = new ArrayList<>();
+    public List<SysRole> findRolesByUserId(String id) {
+        List<SysRole> sysRoleList = new ArrayList<>();
         System.out.println(">>>>>>>>>>>"+id);
-        roleList = roleDao.findRolesByUserId(id);
-        return roleList;
+        sysRoleList = roleDao.findRolesByUserId(id);
+        return sysRoleList;
     }
 }

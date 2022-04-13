@@ -7,16 +7,16 @@
 <mapper namespace="com.example.paoche.dao.RoleDao">
 
     <!--    findRolesByUserId-->
-    <select id="findRolesByUserId" resultMap="roleList">
+    <select id="findRolesByUserId" resultMap="sysRoleList">
         SELECT
             id,
             rolename
         FROM
-            role
+            sysRole
         WHERE
             id IN ( SELECT role_id FROM user_role WHERE id = 1 )
     </select>
-    <resultMap id="roleList" type="com.example.paoche.entity.Role">
+    <resultMap id="sysRoleList" type="com.example.paoche.entity.SysRole">
         <result column="id" property="id"></result>
         <result column="rolename" property="rolename"></result>
     </resultMap>

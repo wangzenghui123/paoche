@@ -1,9 +1,9 @@
 package com.example.paoche.service;
 
-import com.example.paoche.entity.Permission;
+import com.example.paoche.entity.SysPermission;
 
 import java.util.List;
 
 public interface PermissionService {
-    List<Permission> findPermissionsByRoleId(String roleId);
+    List<SysPermission> findPermissionsByRoleId(String roleId);
 }
