@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>home</title>
+    <style>
+        body{
+            margin: 0px;
+            border: 0px;
+        }
+    </style>
+</head>
+<body>
+    <button value="button" onclick="qclick()"></button>
+</body>
+<script src="/static/js/core.util.js"></script>
+<script src="/static/layui/layui.all.js"></script>
+<script>
+    function qclick(){
+       alert(CoreUtil.getData("access_token"))
+        CoreUtil.sendAjax("/api/home/menu",null,true)
+    }
+</script>
+</html>

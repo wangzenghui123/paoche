@@ -22,7 +22,6 @@
             width: 100%;
         }
     </style>
-
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
@@ -100,7 +99,7 @@
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <iframe id=" myiframe" src="1.html"></iframe>
+        <iframe id=" myiframe" src="/templates/home.html"></iframe>
     </div>
 
     <div class="layui-footer">
@@ -108,15 +107,12 @@
         底部固定区域
     </div>
 </div>
-<script src="/layui/layui.all.js"></script>
 <script>
-    //JS
     layui.use(['element', 'layer', 'util'], function(){
         var element = layui.element
             ,layer = layui.layer
             ,util = layui.util
             ,$ = layui.$;
-
         //头部事件
         util.event('lay-header-event', {
             //左侧菜单事件
@@ -143,6 +139,10 @@
         let parentElement = myiframe.parentElement;
         let fheight = window.getComputedStyle(parentElement).height
         myiframe.style.height=fheight;
+</script>
+<script>
+    CoreUtil.sendAjax("/api/home/menu",undefined,"POST",false,function (resp){
+   },undefined,undefined,undefined,false)
 </script>
 </body>
 </html>

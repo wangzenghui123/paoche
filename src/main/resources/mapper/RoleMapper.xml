@@ -10,15 +10,15 @@
     <select id="findRolesByUserId" resultMap="sysRoleList">
         SELECT
             id,
-            rolename
+            name
         FROM
-            sysRole
+            sys_role
         WHERE
-            id IN ( SELECT role_id FROM user_role WHERE id = 1 )
+            id IN ( SELECT role_id FROM sys_user_role WHERE id = 1 )
     </select>
     <resultMap id="sysRoleList" type="com.example.paoche.entity.SysRole">
         <result column="id" property="id"></result>
-        <result column="rolename" property="rolename"></result>
+        <result column="name" property="name"></result>
     </resultMap>
 
 </mapper>

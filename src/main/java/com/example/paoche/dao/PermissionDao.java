@@ -9,4 +9,5 @@ import java.util.List;
 public interface PermissionDao {
 
     List<SysPermission> findPermissionsByRoleId(String roleId);
+    List<SysPermission> findAllPermissions();
 }

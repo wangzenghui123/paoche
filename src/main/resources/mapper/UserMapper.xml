@@ -7,7 +7,7 @@
 <mapper namespace="com.example.paoche.dao.UserDao">
 
     <select id="findUserByName" resultType="com.example.paoche.entity.SysUser">
-        select * from sysUser where username = #{username}
+        select * from sys_User where username = #{username}
     </select>
 
 </mapper>

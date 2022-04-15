@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/api")
-@Slf4j
 public class UserController {
 
     @Autowired
@@ -39,10 +39,15 @@ public class UserController {
     public String index(){
         return "main";
     }
+    @RequestMapping("/login")
+    public String userlogin(){
+        return "login";
+    }
 
     @RequestMapping("/user/login")
     @ResponseBody
     public DataResult login(@RequestBody LoginReqVO loginReqVO){
+        System.out.println(11);
         DataResult dataResult = new DataResult<>(0,"success");
         LoginRespVO loginRespVO = userServiceImpl.login(loginReqVO);
         System.out.println(loginRespVO.getAccess_token());
