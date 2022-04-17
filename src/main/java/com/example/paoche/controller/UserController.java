@@ -47,7 +47,6 @@ public class UserController {
     @RequestMapping("/user/login")
     @ResponseBody
     public DataResult login(@RequestBody LoginReqVO loginReqVO){
-        System.out.println(11);
         DataResult dataResult = new DataResult<>(0,"success");
         LoginRespVO loginRespVO = userServiceImpl.login(loginReqVO);
         System.out.println(loginRespVO.getAccess_token());

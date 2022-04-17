@@ -67,10 +67,9 @@ public class MyRealm extends AuthorizingRealm {
         }
         return info;
     }
-
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        MyUsernamePasswordToken token = (MyUsernamePasswordToken) authenticationToken;
         return new SimpleAuthenticationInfo(token.getPrincipal(),token.getCredentials(),this.getName());
     }
 }

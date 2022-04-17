@@ -99,9 +99,7 @@
         var form = layui.form;
         //form.render(); //更新全部
         form.on('submit',function (data){
-            alert(1)
             CoreUtil.sendAjax("/api/user/login",JSON.stringify(data.field),undefined,"POST",function (resp){
-                alert(111111)
                 CoreUtil.setData("access_token",resp.data.access_token);
                 CoreUtil.setData("refresh_token",resp.data.refresh_token);
                 window.location.href="/api/home";

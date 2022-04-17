@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css">
     <script src="/static/js/core.util.js"></script>
     <script src="/static/layui/layui.all.js"></script>
+    <script src="/static/layui/layui.js"></script>
     <style>
         .system-title{
             font-family: "微软雅黑 Light";
@@ -26,7 +27,7 @@
 <body>
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="system-title layui-logo layui-hide-xs layui-bg-black ">炮车疫情防控系统</div>
+        <div class="layui-logo layui-hide-xs layui-bg-black">layout demo</div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <!-- 移动端显示 -->
@@ -37,7 +38,8 @@
             <li class="layui-nav-item layui-hide-xs"><a href="">nav 1</a></li>
             <li class="layui-nav-item layui-hide-xs"><a href="">nav 2</a></li>
             <li class="layui-nav-item layui-hide-xs"><a href="">nav 3</a></li>
-            <li class="layui-nav-item"><a href="javascript:;">nav groups</a>
+            <li class="layui-nav-item">
+                <a href="javascript:;">nav groups</a>
                 <dl class="layui-nav-child">
                     <dd><a href="">menu 11</a></dd>
                     <dd><a href="">menu 22</a></dd>
@@ -48,8 +50,8 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
                 <a href="javascript:;">
-                    <img src="" class="layui-nav-img">
-                    王增辉
+                    <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+                    tester
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">Your Profile</a></dd>
@@ -65,41 +67,18 @@
         </ul>
     </div>
 
+
+<!-- #######################################################    左侧菜单栏    ########################################################-->
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-            <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">menu group 1</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;"> &nbsp;menu 1</a>
-                            <dl class="layui-nav-child">
-                                <dd><a href="javascript:;">&nbsp;&nbsp;  menu 1</a></dd>
-                                <dd><a href="javascript:;"> menu 2</a></dd>
-                                <dd><a href="javascript:;"> menu 3</a></dd>
-                                <dd><a href="">the links</a></dd>
-                            </dl>
-                        </dd>
-                        <dd><a href="javascript:;">menu 2</a></dd>
-                        <dd><a href="javascript:;">menu 3</a></dd>
-                        <dd><a href="">the links</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="javascript:;">menu group 2</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">list 1</a></dd>
-                        <dd><a href="javascript:;">list 2</a></dd>
-                        <dd><a href="">超链接</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="javascript:;">click menu item</a></li>
-                <li class="layui-nav-item"><a href="">the links</a></li>
-            </ul>
+            <ul class="layui-nav layui-nav-tree" lay-filter="test"></ul>
         </div>
     </div>
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <iframe id=" myiframe" src="/templates/home.html"></iframe>
+        <iframe id="myiframe" src="/templates/home.html"></iframe>
     </div>
 
     <div class="layui-footer">
@@ -107,12 +86,15 @@
         底部固定区域
     </div>
 </div>
+
 <script>
+    //JS
     layui.use(['element', 'layer', 'util'], function(){
         var element = layui.element
             ,layer = layui.layer
             ,util = layui.util
             ,$ = layui.$;
+
         //头部事件
         util.event('lay-header-event', {
             //左侧菜单事件
@@ -134,15 +116,51 @@
     });
 </script>
 <script>
-        let myiframe = document.getElementById(" myiframe")
+        let myiframe = document.getElementById("myiframe")
         let height = window.getComputedStyle(myiframe).height.replace("px","");
         let parentElement = myiframe.parentElement;
         let fheight = window.getComputedStyle(parentElement).height
         myiframe.style.height=fheight;
 </script>
 <script>
-    CoreUtil.sendAjax("/api/home/menu",undefined,"POST",false,function (resp){
-   },undefined,undefined,undefined,false)
+    layui.use(['jquery','layer','element','util'],function (){
+        var $ = layui.$;
+        var util = layui.util;
+        var layer = layui.layer;
+        var element = layui.element;
+        function getChild(menuHTML,children){
+            let reHTML = menuHTML + '<dl class="layui-nav-child">';
+            $.each(children,function (index,child){
+                reHTML = reHTML + '<dd>' ;
+                if(child.children != null && child.children != undefined && child.children.length > 0){
+                    reHTML = reHTML +  '<a href="javascript:;">' + child.title + '</a>';
+                    reHTML = getChild(reHTML,child.children);
+                }else{
+                    reHTML = reHTML +  '<a href="javascript:;" class="menuNavBar" data-id="'+child.id+'data-url='+child.url+'data-title'+child.title+'">'+child.title+'</a>';
+                }
+                reHTML = reHTML + '</dd>';
+            })
+            reHTML = reHTML + ' </dl>';
+            return reHTML;
+        }
+        CoreUtil.sendAjax("/api/home/menu",null,true,"POST",function (resp){
+            let elements = document.getElementsByClassName("layui-nav layui-nav-tree");
+            let menuBoxElement = elements[0];
+            let menuHTML = ""
+            $.each(resp.data.menus,function (index,item) {
+                menuHTML = menuHTML + '<li class="layui-nav-item">';
+                if(item.children != null  &&  item.children != undefined &&  item.children.length > 0){
+                    menuHTML = menuHTML +  '<a href="javascript:;" >'+item.title+'</a>';
+                    menuHTML = getChild(menuHTML,item.children);
+                }else{
+                    menuHTML = menuHTML +  '<a href="javascript:;" class="menuNavBar" data-id="'+item.id+'data-url='+item.url+'data-title'+item.title+'">'+item.title+'</a>';
+                }
+                menuHTML = menuHTML + '</li>';
+            })
+            menuBoxElement.innerHTML=menuHTML;
+            element.render('nav');
+        },undefined,undefined);
+    })
 </script>
 </body>
 </html>
