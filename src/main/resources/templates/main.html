@@ -22,6 +22,19 @@
             border: 0px;
             width: 100%;
         }
+        .layui-tab{
+            margin:0px;
+        }
+        .layui-side-scroll {
+            position: relative;
+            width: 200px;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        li.layui-this {
+            background-color: #009688;
+        }
+
     </style>
 </head>
 <body>
@@ -76,11 +89,24 @@
         </div>
     </div>
 
-    <div class="layui-body">
-        <!-- 内容主体区域 -->
-        <iframe id="myiframe" src="/templates/home.html"></iframe>
-    </div>
 
+
+<!--    ##############################################-->
+
+    <div class="layui-body">
+        <div class="layui-tab" lay-filter="demo" lay-allowclose="true">
+            <ul class="layui-tab-title">
+                <li lay-id="11" lay-allowclose="false">1</li>
+
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    项目介绍
+                </div>
+
+            </div>
+        </div>
+    </div>
     <div class="layui-footer">
         <!-- 底部固定区域 -->
         底部固定区域
@@ -116,15 +142,28 @@
     });
 </script>
 <script>
-        let myiframe = document.getElementById("myiframe")
-        let height = window.getComputedStyle(myiframe).height.replace("px","");
-        let parentElement = myiframe.parentElement;
-        let fheight = window.getComputedStyle(parentElement).height
-        myiframe.style.height=fheight;
+        function flushIframe(){
+            let myiframe = document.getElementById("myiframe")
+            let height = window.getComputedStyle(myiframe).height.replace("px","");
+            let parentElement = myiframe.parentElement;
+            let fheight = window.getComputedStyle(parentElement).height
+            myiframe.style.height=fheight;
+        }
+        flushIframe();
+        function reframe(tabId){
+            let layuiBody = document.getElementsByClassName("layui-body")[0];
+            let height = window.getComputedStyle(layuiBody).height.replace("px","");
+            let layuiThis = document.getElementsByClassName("layui-tab-content")[0];
+            let layuiShow = document.getElementsByClassName("layui-show")[0];
+            let myiframe = document.getElementById(tabId)
+            layuiThis.style.height = height+"px";
+            layuiShow.style.height = height + "px";
+            myiframe.style.height = height + "px";
+        }
 </script>
 <script>
     layui.use(['jquery','layer','element','util'],function (){
-        var $ = layui.$;
+        var $ = layui.jquery;
         var util = layui.util;
         var layer = layui.layer;
         var element = layui.element;
@@ -136,7 +175,7 @@
                     reHTML = reHTML +  '<a href="javascript:;">' + child.title + '</a>';
                     reHTML = getChild(reHTML,child.children);
                 }else{
-                    reHTML = reHTML +  '<a href="javascript:;" class="menuNavBar" data-id="'+child.id+'data-url='+child.url+'data-title'+child.title+'">'+child.title+'</a>';
+                    reHTML = reHTML +  '<a href="javascript:;" class="menuNavBar" data-id="'+child.id+'"data-url="'+child.url+'"data-title="'+child.title+'">'+child.title+'</a>';
                 }
                 reHTML = reHTML + '</dd>';
             })
@@ -153,13 +192,50 @@
                     menuHTML = menuHTML +  '<a href="javascript:;" >'+item.title+'</a>';
                     menuHTML = getChild(menuHTML,item.children);
                 }else{
-                    menuHTML = menuHTML +  '<a href="javascript:;" class="menuNavBar" data-id="'+item.id+'data-url='+item.url+'data-title'+item.title+'">'+item.title+'</a>';
+                    menuHTML = menuHTML +  '<a href="javascript:;" class="menuNavBar" data-id="'+item.id+'"data-url='+item.url+'"data-title='+item.title+'">'+item.title+'</a>';
                 }
                 menuHTML = menuHTML + '</li>';
             })
             menuBoxElement.innerHTML=menuHTML;
             element.render('nav');
         },undefined,undefined);
+        var active = {
+            tabAdd: function(tabId,tabURL,tabTitle){
+                let tabTitleElement = document.getElementsByClassName("layui-tab-title")[0];
+                let tabTitleElementChild= tabTitleElement.getElementsByTagName("li");
+                let mark = false;
+                for (let i = 0; i < tabTitleElementChild.length; i++) {
+                    if(tabTitleElementChild[i].getAttribute("lay-id") == tabId){
+                        mark = true;
+                    }
+                }
+                if(mark){
+                    this.tabChange('demo',tabId)
+                }else{
+                    element.tabAdd('demo', {
+                        title: tabTitle
+                        , content: '<iframe id="'+tabId+'" src="/templates'+tabURL+'"></iframe>'
+                        ,id: tabId
+                    })
+                }
+                element.tabChange('demo', tabId);
+                reframe(tabId)
+            }
+            ,tabDelete: function(othis){
+                element.tabDelete('demo', '44');
+                othis.addClass('layui-btn-disabled');
+            }
+            ,tabChange: function(demo,tabId){
+                element.tabChange('demo', tabId);
+                reframe(tabId)
+            }
+        };
+        $(document).on('click','.menuNavBar',function (){
+            let tabId = this.getAttribute("data-id");
+            let tabURL = this.getAttribute("data-url");
+            let tabTitle = this.getAttribute("data-title");
+            active.tabAdd(tabId,tabURL,tabTitle);
+        })
     })
 </script>
 </body>
