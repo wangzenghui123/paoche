@@ -1,8 +1,6 @@
-/*CoreUtil*/
-/*工具类，类似java静态工具类*/
+
 var CoreUtil = (function () {
     var coreUtil = {};
-    /*ajax请求*/
     coreUtil.sendAjax = function (url, params,headers, method,ft, noAuthorityFt, contentType,async) {
         var roleSaveLoading = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
         layui.jquery.ajax({

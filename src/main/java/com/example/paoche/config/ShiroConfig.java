@@ -179,9 +179,12 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/index","anon");
         filterChainDefinitionMap.put("/api/home","anon");
         filterChainDefinitionMap.put("/api/login","anon");
-        filterChainDefinitionMap.put("/templates/home.html","anon");
-        filterChainDefinitionMap.put("/images/**", "anon");
+//        filterChainDefinitionMap.put("/templates/home.html","anon");
+//        filterChainDefinitionMap.put("/templates/index.html","anon");
+        filterChainDefinitionMap.put("/templates/**","anon");
         filterChainDefinitionMap.put("/static/**", "anon");
+        filterChainDefinitionMap.put("/static/images/4.jpg", "anon");
+        filterChainDefinitionMap.put("/images/**", "anon");
         filterChainDefinitionMap.put("/layui/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/css/**", "anon");

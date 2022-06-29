@@ -2,6 +2,7 @@ package com.example.paoche.controller;
 
 import com.example.paoche.entity.SysPermission;
 import com.example.paoche.entity.SysRole;
+import com.example.paoche.entity.SysUser;
 import com.example.paoche.exception.BusinessException;
 import com.example.paoche.exception.code.BaseResponseCode;
 import com.example.paoche.service.impl.PermissionServiceImpl;
@@ -51,6 +52,25 @@ public class UserController {
         LoginRespVO loginRespVO = userServiceImpl.login(loginReqVO);
         System.out.println(loginRespVO.getAccess_token());
         dataResult.setData(loginRespVO);
+        return dataResult;
+    }
+
+    @RequestMapping("/user/userTable")
+    @ResponseBody
+    public DataResult userTable(){
+        DataResult dataResult = new DataResult(BaseResponseCode.SUCCESS);
+        dataResult.setCount(userServiceImpl.countUser());
+        dataResult.setData(userServiceImpl.findUserByPage());
+        return dataResult;
+    }
+    @RequestMapping("/user/userDelete{id}")
+    @ResponseBody
+    public DataResult userDelete(@PathVariable String id){
+        DataResult dataResult = null;
+        Long num = userServiceImpl.deleteUserById(id);
+        if (num == 1){
+             dataResult= new DataResult(BaseResponseCode.SUCCESS);
+        }
         return dataResult;
     }
     @RequestMapping("/index")

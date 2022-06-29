@@ -1,7 +1,5 @@
 package com.example.paoche;
 
-import com.example.paoche.util.JwtTokenUtil;
-import com.example.paoche.util.Md5HashUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,16 +12,16 @@ import java.util.HashMap;
 @SpringBootTest
 public class JwtTokenUtilTest {
 
-    @Test
-    public void testGetAccessToken() throws NoSuchFieldException {
-        String accessToken = JwtTokenUtil.getAccessToken("111", new HashMap<>());
-        Claims claimsFromToken = JwtTokenUtil.getClaimsFromToken(accessToken);
-        System.out.println("Subject "+claimsFromToken.getSubject());
-        System.out.println("ʣ��ʱ��"+JwtTokenUtil.getRemainingTime(accessToken));
-    }
-
-    @Test
-    public void testHashUtil(){
-        System.out.println(Md5HashUtil.hashPassword("123456", "yyyyyy", 1024));
-    }
+//    @Test
+//    public void testGetAccessToken() throws NoSuchFieldException {
+//        String accessToken = JwtTokenUtil.getAccessToken("111", new HashMap<>());
+//        Claims claimsFromToken = JwtTokenUtil.getClaimsFromToken(accessToken);
+//        System.out.println("Subject "+claimsFromToken.getSubject());
+//        System.out.println("ʣ��ʱ��"+JwtTokenUtil.getRemainingTime(accessToken));
+//    }
+//
+//    @Test
+//    public void testHashUtil(){
+//        System.out.println(Md5HashUtil.hashPassword("123456", "yyyyyy", 1024));
+//    }
 }

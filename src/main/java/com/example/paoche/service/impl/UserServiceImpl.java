@@ -72,4 +72,19 @@ public class UserServiceImpl implements UserService {
         loginRespVO.setId(sysUser.getId());
         return loginRespVO;
     }
+
+    @Override
+    public Long countUser() {
+        return userdao.countUser();
+    }
+
+    @Override
+    public List<SysUser> findUserByPage() {
+        return userdao.findUserByPage();
+    }
+
+    @Override
+    public Long deleteUserById(String id) {
+        return userdao.deleteUserById(id);
+    }
 }

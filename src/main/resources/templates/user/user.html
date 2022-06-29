@@ -3,25 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <title>user</title>
+    <link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css">
+    <script src="/static/js/core.util.js"></script>
+    <script src="/static/layui/layui.all.js"></script>
+    <script src="/static/layui/layui.js"></script>
+    <style>
+        html{
+            overflow-y: hidden;
+        }
+    </style>
 </head>
 <body>
-用户管理1
-用户管理
-用户管理
-用户管理4
-用户管理
-用户管理
-用户管理用户管理
-用户管理用户管理用户管理用户管理用户管理
-用户管理
-用户管理
-用户管理
-用户管理
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-group demoTable">
+        <button class="layui-btn layui-btn-sm" data-type="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" data-type="getCheckLength">获取选中数目</button>
+        <button class="layui-btn layui-btn-sm" data-type="isAll">验证是否全选</button>
+        <button class="layui-btn layui-btn-sm" data-type="isAll">批量删除</button>
+    </div>
+</script>
 
+<table id="demo" lay-filter="demo">
 
-
+</table>
 
 
 
 </body>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="detail">查看</button>
+        <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>
+    </div>
+</script>
+<script>
+    // ,{field: 'email', title: '邮箱', width:80}
+    // ,{field: 'status', title: '状态', width:80}
+    // ,{field: 'deleted', title: '是否删除', width:80}
+    // ,{field: 'createId', title: 'createId', width:80}
+    // ,{field: 'updateId', title: 'updateId', width:80}
+    // ,{field: 'createWhere', title: 'createWhere', width:80}
+    // ,{field: 'createTime', title: 'createTime', width:80}
+    // ,{field: 'updateTime', title: 'updateTime', width:80}
+    // ,{field: 'deptName', title: '部门名称', width:80}
+    layui.use(['table','element','jquery'], function(){
+        var table = layui.table;
+        var $ = layui.jquery;
+        var element = layui.element;
+
+        table.render({
+            elem: '#demo'
+            ,url: '/api/user/userTable'
+            ,headers: {authorization: CoreUtil.getData("access_token")}
+            ,page: true
+            ,id:"demo"
+            ,defaultToolbar: ['filter', 'print', 'exports', {
+                title: '提示' //标题
+                ,layEvent: 'LAYTABLE_TIPS' //事件名，用于 toolbar 事件中使用
+                ,icon: 'layui-icon-tips' //图标类名
+            }]
+            ,toolbar: "#toolbar"
+            ,cols: [
+                [
+                    {type:'checkbox', fixed: 'left'}
+                ,{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+                ,{field: 'username', title: '用户名', width:80}
+                ,{field: 'sex', title: '性别', width:80}
+                ,{field: 'city', title: '城市', width:80}
+                ,{field: 'salt', title: '盐值', width:80}
+                ,{field: 'password', title: '密码', width:160}
+                ,{field: 'phone', title: '手机', width:160}
+                ,{field: 'deptId', title: '部门id', width:80}
+                ,{field: 'realName', title: '真实姓名', width:80}
+                ,{field: 'nickName', title: '昵称', width:80}
+                    ,{fixed: 'right', width:178, align:'center', toolbar: '#toolbarDemo'}
+            ]
+            ]
+            ,done:function (){
+                element.render()
+
+                let layuiBody = window.parent.document.getElementsByClassName("layui-body")[0];
+                let layuiTab = layuiBody.getElementsByClassName("layui-tab")[0];
+                let layuiTabContent = layuiBody.getElementsByClassName("layui-tab-content")[0];
+                let layuiTabTitle = layuiTab.getElementsByClassName("layui-tab-title")[0];
+                let tabTitleHeight =  window.parent.window.getComputedStyle(layuiTabTitle).height.replace("px","");
+                let layuiBodyHeight = window.parent.window.getComputedStyle(layuiBody).height.replace("px","");
+                layuiTab.style.height = layuiBodyHeight + "px";
+                layuiTabContent.style.height = (parseInt(layuiBodyHeight) - parseInt(tabTitleHeight)) + "px";
+                let layuiShow = layuiTabContent.getElementsByClassName("layui-tab-item layui-show")[0];
+                layuiShow.style.height = (parseInt(layuiBodyHeight) - parseInt(tabTitleHeight)) + "px";
+                let iframe = layuiShow.getElementsByTagName("iframe")[0];
+                iframe.style.height = (parseInt(layuiBodyHeight) - parseInt(tabTitleHeight)) + "px";
+                let layuiForm = document.getElementsByClassName("layui-form layui-border-box layui-table-view")[0];
+                layuiForm.style.height = (parseInt(layuiBodyHeight) - parseInt(tabTitleHeight)) + "px";
+                let mainTable = document.getElementsByClassName("layui-table-body layui-table-main")[0];
+                mainTable.style.height = (parseInt(layuiBodyHeight) - parseInt(tabTitleHeight)) + "px";
+                let tablePage = document.getElementsByClassName("layui-table-page")[0];
+                let tablePageHeight = window.getComputedStyle(tablePage).height.replace("px","");
+                let tableBox = document.getElementsByClassName("layui-table-box")[0];
+                tableBox.style.height = (parseInt(layuiBodyHeight) - parseInt(tabTitleHeight) - parseInt(tablePageHeight) - 80) + "px";
+                let layuiTable = tableBox.getElementsByClassName("layui-table")[0];
+                layuiTable.setAttribute("lay-filter","demo")
+
+            }
+        });
+
+        table.on('checkbox(demo)', function(obj){
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(demo)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                //iframe 层
+                layer.open({
+                    type: 2,
+                    title: '查看信息',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['90%', '90%'],
+                    content: 'userDetail.html',
+                    success: function (layero,index){
+                        var div =  layero.find('iframe').contents().find('#showDetail');
+                        var body = layer.getChildFrame('body',index);
+                        //获取子页面index
+                        var iframeWindow  = window['layui-layer-iframe'+index];
+                        //给子页面id="showDetail"的div里的不同id值的元素赋值
+                        div.find("#num").val(data.id)
+                        div.find("#username").val(data.username)
+                        div.find("#sex").val(data.sex)
+                        div.find("#city").val(data.city)
+                        div.find("#salt").val(data.salt)
+                        div.find("#password").val(data.password)
+                        div.find("#phone").val(data.phone)
+                        div.find("#department").val(data.department)
+                        div.find("#realName").val(data.realName)
+                        div.find("#nickName").val(data.nickName)
+                    }
+                });
+            } else if(obj.event === 'delete'){
+                layer.confirm('真的删除这条数据吗？？', {
+                    btn: ['删除','取消'] //按钮
+                }, function(index){
+                    obj.del();
+                    layer.close(index);
+                    CoreUtil.sendAjax('/api/user/userDelete'+data.id,JSON.stringify(data.id),true,'GET',function (resp){
+                        if(resp.code == 0){
+                            layer.msg("删除成功")
+                        }else{
+                            layer.msg("删除失败")
+                        }
+                    })
+                }, function(){
+                });
+            } else if(obj.event === 'update'){
+                layer.alert('编辑行：<br>'+ JSON.stringify(data))
+            }
+        });
+
+        var $ = layui.jquery,
+            active01 = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('demo')
+                    ,data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+            ,getCheckLength: function(){ //获取选中数目
+                var checkStatus = table.checkStatus('demo')
+                    ,data = checkStatus.data;
+                layer.msg('选中了：'+ data.length + ' 个');
+            }
+            ,isAll: function(){ //验证是否全选
+                var checkStatus = table.checkStatus('demo');
+                layer.msg(checkStatus.isAll ? '全选': '未全选')
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active01[type] ? active01[type].call(this) : '';
+        });
+    });
+
+</script>
 </html>

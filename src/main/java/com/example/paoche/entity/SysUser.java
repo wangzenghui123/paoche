@@ -37,7 +37,7 @@ public class SysUser {
 
     private Integer createWhere;
 
-    private Date createTime;
+        private Date createTime;
 
     private Date updateTime;
 

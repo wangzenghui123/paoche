@@ -13,6 +13,7 @@ public class DataResult<T>  {
     private int code;
     private String msg;
     private T data;
+    private Long count;
 
     public DataResult(int code,String msg){
         this.code = code;

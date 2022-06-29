@@ -14,14 +14,17 @@
             font-size:20px;
             color: #0000FF;
         }
+
         .layui-body{
             overflow: hidden;
         }
+
         iframe{
             margin: 0px;
             border: 0px;
             width: 100%;
         }
+
         .layui-tab{
             margin:0px;
         }
@@ -35,12 +38,22 @@
             background-color: #009688;
         }
 
+        .layui-tab-title{
+            height: 30px;
+        }
+        .layui-tab-title li{
+            height: 30px;
+            line-height: 30px;
+        }
+
+
+
     </style>
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo layui-hide-xs layui-bg-black">layout demo</div>
+        <div class="layui-logo layui-hide-xs layui-bg-black" id="headerTitle">高新区人员管理系统</div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <!-- 移动端显示 -->
@@ -63,7 +76,7 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
                 <a href="javascript:;">
-                    <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+                    <img src="/static/images/4.jpg" class="layui-nav-img">
                     tester
                 </a>
                 <dl class="layui-nav-child">
@@ -89,20 +102,13 @@
         </div>
     </div>
 
-
-
 <!--    ##############################################-->
-
     <div class="layui-body">
         <div class="layui-tab" lay-filter="demo" lay-allowclose="true">
             <ul class="layui-tab-title">
-                <li lay-id="11" lay-allowclose="false">1</li>
 
             </ul>
             <div class="layui-tab-content">
-                <div class="layui-tab-item layui-show">
-                    项目介绍
-                </div>
 
             </div>
         </div>
@@ -142,14 +148,17 @@
     });
 </script>
 <script>
-        function flushIframe(){
-            let myiframe = document.getElementById("myiframe")
-            let height = window.getComputedStyle(myiframe).height.replace("px","");
-            let parentElement = myiframe.parentElement;
-            let fheight = window.getComputedStyle(parentElement).height
-            myiframe.style.height=fheight;
-        }
-        flushIframe();
+    // function flushIframe(){
+    //     let myiframe = document.getElementsByTagName("iframe")
+    //     for (let i = 0; i < myiframe.length; i++) {
+    //         let height = window.getComputedStyle(myiframe[i]).height.replace("px","");
+    //         let parentElement = myiframe[i].parentElement;
+    //         let fheight = window.getComputedStyle(parentElement).height
+    //         myiframe[i].style.height=fheight;
+    //     }
+    //
+    // }
+    // flushIframe();
         function reframe(tabId){
             let layuiBody = document.getElementsByClassName("layui-body")[0];
             let height = window.getComputedStyle(layuiBody).height.replace("px","");
@@ -157,8 +166,22 @@
             let layuiShow = document.getElementsByClassName("layui-show")[0];
             let myiframe = document.getElementById(tabId)
             layuiThis.style.height = height+"px";
-            layuiShow.style.height = height + "px";
+           layuiShow.style.height = height + "px";
             myiframe.style.height = height + "px";
+        }
+        function changeHeight(tabId){
+            let bodyHeight = window.getComputedStyle(document.getElementsByClassName("layui-body")[0])['height'].replace("px","");
+            console.log(bodyHeight)
+            let titleHeight = window.getComputedStyle(document.getElementsByClassName("layui-tab-title")[0])['height'].replace("px","");
+            console.log(titleHeight)
+            let boxHeight = parseInt(bodyHeight) - parseInt(titleHeight);
+            console.log(boxHeight)
+            let iframeHeight = document.getElementById(tabId).style.height;
+            console.log(iframeHeight)
+            let length = document.getElementById(tabId).contentDocument.getElementsByClassName("layui-table-box").length
+            console.log(length)
+            let box = document.getElementsByClassName("layui-table-box")[0];
+            console.log(box.style.height="500px")
         }
 </script>
 <script>
@@ -204,22 +227,21 @@
                 let tabTitleElement = document.getElementsByClassName("layui-tab-title")[0];
                 let tabTitleElementChild= tabTitleElement.getElementsByTagName("li");
                 let mark = false;
-                for (let i = 0; i < tabTitleElementChild.length; i++) {
-                    if(tabTitleElementChild[i].getAttribute("lay-id") == tabId){
-                        mark = true;
+                    for (let i = 0; i < tabTitleElementChild.length; i++) {
+                        if(tabTitleElementChild[i].getAttribute("lay-id") == tabId){
+                            mark = true;
+                        }
                     }
-                }
-                if(mark){
-                    this.tabChange('demo',tabId)
-                }else{
-                    element.tabAdd('demo', {
-                        title: tabTitle
-                        , content: '<iframe id="'+tabId+'" src="/templates'+tabURL+'"></iframe>'
-                        ,id: tabId
-                    })
-                }
-                element.tabChange('demo', tabId);
-                reframe(tabId)
+                    if(mark){
+                        this.tabChange('demo',tabId)
+                    }else{
+                        element.tabAdd('demo', {
+                            title: tabTitle
+                            , content: '<iframe id="'+tabId+'" src="/templates'+tabURL+'"></iframe>'
+                            ,id: tabId
+                        })
+                        this.tabChange('demo',tabId)
+                    }
             }
             ,tabDelete: function(othis){
                 element.tabDelete('demo', '44');
@@ -227,15 +249,21 @@
             }
             ,tabChange: function(demo,tabId){
                 element.tabChange('demo', tabId);
-                reframe(tabId)
             }
         };
         $(document).on('click','.menuNavBar',function (){
             let tabId = this.getAttribute("data-id");
             let tabURL = this.getAttribute("data-url");
             let tabTitle = this.getAttribute("data-title");
+            console.log(tabTitle)
+            console.log(tabURL)
+            console.log(tabId)
             active.tabAdd(tabId,tabURL,tabTitle);
         })
+        $(document).on('click','#headerTitle',function (){
+            active.tabAdd("index","/index.html","index")
+        })
+        active.tabAdd("index","/index.html","index")
     })
 </script>
 </body>

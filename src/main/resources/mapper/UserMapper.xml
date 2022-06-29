@@ -7,7 +7,17 @@
 <mapper namespace="com.example.paoche.dao.UserDao">
 
     <select id="findUserByName" resultType="com.example.paoche.entity.SysUser">
-        select * from sys_User where username = #{username}
+        select * from sys_User where username = #{username} and status = 1
     </select>
 
+    <select id="countUser" resultType="Long">
+        select count(*) from sys_user where status = 1
+    </select>
+
+    <select id="findUserByPage" resultType="com.example.paoche.entity.SysUser">
+        select * from sys_user where status = 1
+    </select>
+    <update id="deleteUserById">
+        update sys_user set status = 0 where id = #{id}
+    </update>
 </mapper>
